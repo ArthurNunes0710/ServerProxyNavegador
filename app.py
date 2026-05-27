@@ -1,8 +1,19 @@
 from flask import Flask , render_template , url_for , request , redirect , session
 import requests
+import json
+from urllib.parse import urlparse
+import re
+
+with open("blocked.json", "r") as arquivo:
+    domin = json.load(arquivo)
+
+domin_bloq = domin["bloqueados"]
+
+with open("words.json", "r") as arquivo:
+    palavras = json.load(arquivo)
+
 
 app = Flask(__name__)
-
 
 @app.route("/", methods=["GET", "POST"] )
 def inicio():
@@ -18,10 +29,20 @@ def inicio():
 @app.route("/<path:url>", methods=["GET", "POST"] )
 def proxy(url):
     if request.method == "GET":
-    
-        resposta = requests.get(url)    
+        
 
-        return resposta.text
+
+        d = urlparse(url).netloc
+        if d in domin_bloq:
+            return render_template("bloqueado.html")
+
+        resposta = requests.get(url)
+        pagina = resposta.text    
+        
+        for p, subs  in palavras.items():
+            pagina = re.sub(p,subs,pagina,flags=re.IGNORECASE)
+
+        return pagina
 
 
 
