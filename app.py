@@ -25,7 +25,6 @@ def log(horario, url, acao):
     with open("log.json", "w") as arquivo:
         json.dump(msgs, arquivo) # escreve as mensagens de log no arquivo log.json
 
-
 with open("blocked.json", "r") as arquivo:
     domin = json.load(arquivo)
 
@@ -46,13 +45,10 @@ def inicio():
 
     return render_template("inicio.html")
 
-
 @app.route("/<path:url>", methods=["GET", "POST"] )
 def proxy(url):
     if request.method == "GET":
         
-
-
         d = urlparse(url).netloc
         if d in domin_bloq:
             # chama a função de escrever as mensagens de log no arquivo log.json e escreve o horário, url e que a url é bloqueada 
