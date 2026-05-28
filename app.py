@@ -9,9 +9,9 @@ from datetime import datetime
 def log(horario, url, acao):
     # formato das mensagens de log 
     arquivo_log = {
-        "Horário": horario,
+        "Horario": horario,
         "URL solicitada": url,
-        "Ação executada": acao
+        "Acao executada": acao
     }
 
     try:
@@ -23,7 +23,7 @@ def log(horario, url, acao):
     msgs.append(arquivo_log) # adiciona a mensagem na lista
 
     with open("log.json", "w") as arquivo:
-        json.dump(msgs, arquivo) # escreve as mensagens de log no arquivo log.json
+        json.dump(msgs, arquivo, ensure_ascii = False) # escreve as mensagens de log no arquivo log.json
 
 with open("blocked.json", "r") as arquivo:
     domin = json.load(arquivo)
