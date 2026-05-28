@@ -1,10 +1,82 @@
-from trabalho_web_proxy import app
-from flask import Flask, request
+from flask import Flask , render_template , url_for , request , redirect , session
+import requests
 import json
-import datetime
+from urllib.parse import urlparse
+import re
+from datetime import datetime
 
-@app.route("/bloqueado")
-def site_bloqueado():
-    # abrir o site - sem mostrar ao cliente
-    with open("blocked.json") as arquivo:
+# função para escrever mensagens de aviso em um arquivo log.json sobre os resultados das requisições
+def log(horario, url, acao):
+    # formato das mensagens de log 
+    arquivo_log = {
+        "Horário": horario,
+        "URL solicitada": url,
+        "Ação executada": acao
+    }
+
+    try:
+        with open("log.json", "r") as arquivo:
+            msgs = json.load(arquivo) # carrega o conteúdo do arquivo log.json
+    except:
+        msgs = [] # cria uma lista de mensagens caso o arquivo esteja vazio
+
+    msgs.append(arquivo_log) # adiciona a mensagem na lista
+
+    with open("log.json", "w") as arquivo:
+        json.dump(msgs, arquivo) # escreve as mensagens de log no arquivo log.json
+
+
+with open("blocked.json", "r") as arquivo:
+    domin = json.load(arquivo)
+
+domin_bloq = domin["bloqueados"]
+
+with open("words.json", "r") as arquivo:
+    palavras = json.load(arquivo)
+
+app = Flask(__name__)
+
+@app.route("/", methods=["GET", "POST"] )
+def inicio():
+    if request.method == "POST":
+    
+        url =  request.form.get("url")    
+
+        return redirect(f"/{url}")
+
+    return render_template("inicio.html")
+
+
+@app.route("/<path:url>", methods=["GET", "POST"] )
+def proxy(url):
+    if request.method == "GET":
         
+
+
+        d = urlparse(url).netloc
+        if d in domin_bloq:
+            # chama a função de escrever as mensagens de log no arquivo log.json e escreve o horário, url e que a url é bloqueada 
+            log(datetime.now().strftime("%H:%M:%S"), url, "bloqueado")
+
+            return render_template("bloqueado.html")
+        
+        resposta = requests.get(url)
+        pagina = resposta.text   
+
+        pagina_filtrada = False 
+        
+        for p, subs  in palavras.items():
+            # busca pelas palavras proibidas no words.json e verifica se elas aparecem no site
+            if re.search(p, pagina, re.IGNORECASE):
+                pagina_filtrada = True 
+            pagina = re.sub(p,subs,pagina,flags=re.IGNORECASE)
+    
+        if pagina_filtrada:
+            log(datetime.now().strftime("%H:%M:%S"), url, "filtrado") # chama a função log e escreve no arquivo log.json o horário, url e que a url é filtrada
+
+        else:
+            log(datetime.now().strftime("%H:%M:%S"), url, "permitido") # chama a função log e escreve no arquivo log.json o horário, url e que o site é permitido 
+
+        return pagina
+    
+app.run(host='0.0.0.0', port=8080)
