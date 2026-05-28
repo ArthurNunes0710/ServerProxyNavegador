@@ -9,3 +9,5 @@ Para as demais bibliotecas que não são padrão do python, como a requests deve
 
 
 ## Como executar o Proxy
+
+Para iniciar o Proxy é necessário apenas executar o arquivo ```app.py```, e então na url do seu navegador digitar a porta ```http://localhost:8080/``` + o site que se deseja acessar, por exemplo: ```http://localhost:8080/http://guthib.com``` e se estiver bloqueado entrará em uma página específica para os sites bloqueados que apenas diz 'Não' no centro da tela 
