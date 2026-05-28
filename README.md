@@ -3,9 +3,9 @@ Um código que simula o comportamento de um servidor Proxy e atua como intermedi
 
 
 ## Instalação de dependências 
-Para instalar o Flask é necessário criar um ambiente virtual através do comando: **```py -m venv venv```**, ativá-lo por meio da instrução **.\venv\scripts\activate** e para a sua instalação deve-se utilizar o **pip install flask**
+Para instalar o Flask é necessário criar um ambiente virtual através do comando: ```py -m venv venv```, ativá-lo por meio da instrução ```.\venv\scripts\activate``` e para a sua instalação deve-se utilizar o ```pip install flask```.
 
-Para as demais bibliotecas que não são padrão do python, como a requests deve-se usar o comando **pip install requests**.
+Para as demais bibliotecas que não são padrão do python, como a requests deve-se usar o comando ```pip install requests```.
 
 
 ## Como executar o Proxy
