@@ -52,7 +52,7 @@ def proxy(url):
         d = urlparse(url).netloc
         if d in domin_bloq:
             # chama a função de escrever as mensagens de log no arquivo log.json e escreve o horário, url e que a url é bloqueada 
-            log(datetime.now().strftime("%H:%M:%S"), url, "bloqueado")
+            log(datetime.now().strftime("%d/%m - %H:%M:%S"), url, "bloqueado")
 
             return render_template("bloqueado.html")
         
@@ -68,10 +68,10 @@ def proxy(url):
             pagina = re.sub(p,subs,pagina,flags=re.IGNORECASE)
     
         if pagina_filtrada:
-            log(datetime.now().strftime("%H:%M:%S"), url, "filtrado") # chama a função log e escreve no arquivo log.json o horário, url e que a url é filtrada
+            log(datetime.now().strftime("%d/%m - %H:%M:%S"), url, "filtrado") # chama a função log e escreve no arquivo log.json o horário, url e que a url é filtrada
 
         else:
-            log(datetime.now().strftime("%H:%M:%S"), url, "permitido") # chama a função log e escreve no arquivo log.json o horário, url e que o site é permitido 
+            log(datetime.now().strftime("%d/%m - %H:%M:%S"), url, "permitido") # chama a função log e escreve no arquivo log.json o horário, url e que o site é permitido 
 
         return pagina
     
