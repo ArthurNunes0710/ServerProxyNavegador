@@ -35,16 +35,6 @@ with open("words.json", "r") as arquivo:
 
 app = Flask(__name__)
 
-@app.route("/", methods=["GET", "POST"] )
-def inicio():
-    if request.method == "POST":
-    
-        url =  request.form.get("url")    
-
-        return redirect(f"/{url}")
-
-    return render_template("inicio.html")
-
 @app.route("/<path:url>", methods=["GET", "POST"] )
 def proxy(url):
     if request.method == "GET":
